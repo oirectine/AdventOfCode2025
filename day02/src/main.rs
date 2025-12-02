@@ -21,17 +21,19 @@ fn add_invalid_ids(range_str: &str, total: &mut i64, total_2: &mut i64 ) {
         .map(|i|i.parse().unwrap())
         .collect();
     for i in range_collection[0]..=range_collection[1] {
-        if count_digits(i) % 2 == 0 {
-            let left = i / 10i64.pow(count_digits(i)/2);
-            let right = i % 10i64.pow(count_digits(i)/2);
+        //Part 1
+        let num_digits = count_digits(i);
+        if num_digits % 2 == 0 {
+            let left = i / 10i64.pow(num_digits/2);
+            let right = i % 10i64.pow(num_digits/2);
             if left == right {
                 *total += i;
             }
         }
-        //Split number, then check if there's a pattern
-        for num in 1..=5 {
-            if count_digits(i) % num == 0 {
-                let number_vector = split_number(i, num as usize);
+        //Split number, then check if there's a pattern (Part 2)
+        for num in 1..=5 { //None of the numbers are greater than 10 digits
+            if num_digits % num == 0 { //Only if the digit count is divisible by num
+                let number_vector = split_number(i, num as usize, num_digits);
                 let  mut number_set: HashSet<i64> = HashSet::new();
                 for number in &number_vector {
                     number_set.insert(*number);
@@ -45,10 +47,10 @@ fn add_invalid_ids(range_str: &str, total: &mut i64, total_2: &mut i64 ) {
     *total_2 += unique_values.iter().sum::<i64>();
 }
 
-fn split_number(n: i64, split_into: usize) -> Vec<i64> {
+fn split_number(n: i64, split_into: usize, num_digits: u32) -> Vec<i64> {
     let mut rtn_vec: Vec<i64> = Vec::new();
-    for i in (0..count_digits(n)).step_by(split_into) {
-        rtn_vec.push(n % 10i64.pow(count_digits(n) - i) / 10i64.pow(count_digits(n) - i - split_into as u32));
+    for i in (0..num_digits).step_by(split_into) {
+        rtn_vec.push(n % 10i64.pow(num_digits - i) / 10i64.pow(num_digits - i - split_into as u32));
     }
     rtn_vec
 }
