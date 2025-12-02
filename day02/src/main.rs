@@ -34,7 +34,7 @@ fn add_invalid_ids(range_str: &str, total: &mut i64, total_2: &mut i64 ) {
         for num in 1..=5 { //None of the numbers are greater than 10 digits
             if num_digits % num == 0 { //Only if the digit count is divisible by num
                 let number_vector = split_number(i, num as usize, num_digits);
-                let  mut number_set: HashSet<i64> = HashSet::new();
+                let mut number_set: HashSet<i64> = HashSet::new();
                 for number in &number_vector {
                     number_set.insert(*number);
                 }
