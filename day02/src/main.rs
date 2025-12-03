@@ -15,22 +15,16 @@ fn main() {
 }
 
 //Find invalid IDs in range string, and add them to the total
-fn add_invalid_ids(range_str: &str, total: &mut i64, total_2: &mut i64 ) {
-    let mut unique_values: HashSet<i64> = HashSet::new();
+fn add_invalid_ids(range_str: &str, total_1: &mut i64, total_2: &mut i64 ) {
+    let mut unique_values_part_1: HashSet<i64> = HashSet::new();
+    let mut unique_values_part_2: HashSet<i64> = HashSet::new();
     let range_collection: Vec<i64> = range_str.split('-')
         .map(|i|i.parse().unwrap())
         .collect();
     for i in range_collection[0]..=range_collection[1] {
         //Part 1
         let num_digits = count_digits(i);
-        if num_digits % 2 == 0 {
-            let left = i / 10i64.pow(num_digits/2);
-            let right = i % 10i64.pow(num_digits/2);
-            if left == right {
-                *total += i;
-            }
-        }
-        //Split number, then check if there's a pattern (Part 2)
+        //Split number, then check if there's a pattern
         for num in 1..=5 { //None of the numbers are greater than 10 digits
             if num_digits % num == 0 { //Only if the digit count is divisible by num
                 let number_vector = split_number(i, num as usize, num_digits);
@@ -39,12 +33,14 @@ fn add_invalid_ids(range_str: &str, total: &mut i64, total_2: &mut i64 ) {
                     number_set.insert(*number);
                 }
                 if number_vector.len() > 1 && number_set.len() == 1 { //Are all the numbers the same?
-                    unique_values.insert(i); //Add the number to the set
+                    if num_digits / num == 2 {unique_values_part_1.insert(i);} //Part 1 only
+                    unique_values_part_2.insert(i); //Add the number to the set
                 }
             }
         }
     }
-    *total_2 += unique_values.iter().sum::<i64>();
+    *total_1 += unique_values_part_1.iter().sum::<i64>();
+    *total_2 += unique_values_part_2.iter().sum::<i64>();
 }
 
 fn split_number(n: i64, split_into: usize, num_digits: u32) -> Vec<i64> {
