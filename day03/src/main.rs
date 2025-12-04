@@ -2,7 +2,7 @@ use std::fs;
 fn main() {
     let input_string = match fs::read_to_string("input.txt") {
         Ok(x) => x,
-        Err(_) => String::from(""),
+        Err(_) => String::new(),
     };
 
     let mut total_joltage_part_1 = 0;
@@ -15,15 +15,16 @@ fn main() {
 }
 
 fn find_highest_joltage(string: &str, digits: u32) -> Option<u64> {
-    if digits == 0 {return None}; //Base case
-    for i in (1..=9).rev() {
-        if string[0..=string.len() - digits as usize].contains(&i.to_string()) {
-            return Some(10u64.pow(digits - 1) * i +
-                match find_highest_joltage(&string[string.find(&i.to_string()).unwrap()+1..],digits-1) {
-                    Some(n) => n,
-                    None => 0,
-                }
-            )
+    if digits > 0 {
+        for i in (1..=9).rev() {
+            if string[0..=string.len() - digits as usize].contains(&i.to_string()) {
+                return Some(10u64.pow(digits - 1) * i +
+                    match find_highest_joltage(&string[string.find(&i.to_string()).unwrap()+1..],digits-1) {
+                        Some(n) => n,
+                        None => 0,
+                    }
+                )
+            }
         }
     }
     None
