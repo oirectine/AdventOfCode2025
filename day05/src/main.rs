@@ -27,12 +27,12 @@ fn main() {
         let end: u64 = range.split('-').collect::<Vec<&str>>()[1].parse().unwrap();
         ranges.push((start, end));
     }
-    ranges.sort_by(|a, b| a.0.cmp(&b.0)); //Sort ranges
-    let count_ranges = count_all_ranges(&ranges);
+    let count_ranges = count_all_ranges(&mut ranges);
     println!("Fresh items (Part 1): {count}\nTotal fresh items (Part 2): {count_ranges}");
 }
 
-fn count_all_ranges(ranges: &Vec<(u64, u64)>) -> u64 {
+fn count_all_ranges(ranges: &mut Vec<(u64, u64)>) -> u64 {
+    ranges.sort_by(|a, b| a.0.cmp(&b.0)); //Sort ranges
 
     let mut count = 0;
     let mut previous= 0;
