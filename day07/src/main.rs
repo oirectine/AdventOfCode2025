@@ -12,9 +12,9 @@ fn main() {
 fn count_splits (map: &Vec<&str>) -> (u64, u64) {
     let mut cache: HashMap<(usize, usize), u64> = HashMap::new();
     let start_col = map[0].find('S').unwrap();
-    let count = fire_beam(&map, 0, start_col, false, &mut cache);
+    let count = fire_beam(map, 0, start_col, false, &mut cache);
     cache.clear();
-    let quantum_result = fire_beam(&map, 0, start_col, true, &mut cache) + 1;
+    let quantum_result = fire_beam(map, 0, start_col, true, &mut cache) + 1;
     fn fire_beam(map: &Vec<&str>, row: usize, col: usize, quantum: bool, cache: &mut HashMap<(usize, usize), u64>) -> u64 {
         let mut timelines: u64 = 0;
         if let Some(&value) = cache.get(&(row, col)) {
