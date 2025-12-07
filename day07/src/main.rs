@@ -1,4 +1,4 @@
-use std::{collections::{HashMap, HashSet}, fs};
+use std::{fs, collections::HashMap};
 fn main() {
     let input_string = match fs::read_to_string("input.txt") {
         Ok(x) => x,
@@ -10,44 +10,34 @@ fn main() {
 }
 
 fn count_splits (map: &Vec<&str>) -> (u64, u64) {
-    let mut count: u64 = 0;
-    let mut visited: HashSet<(usize, usize)> = HashSet::new();
     let mut cache: HashMap<(usize, usize), u64> = HashMap::new();
     let start_col = map[0].find('S').unwrap();
-    fire_beam(&map, 0, start_col, &mut visited, &mut count, false, &mut cache);
-    let quantum_result = fire_beam(&map, 0, start_col, &mut visited, &mut count, true, &mut cache) + 1;
-    fn fire_beam(map: &Vec<&str>, row: usize, col: usize, visited: &mut HashSet<(usize, usize)>, count: &mut u64, quantum: bool, cache: &mut HashMap<(usize, usize), u64>) -> u64 {
+    let count = fire_beam(&map, 0, start_col, false, &mut cache);
+    cache.clear();
+    let quantum_result = fire_beam(&map, 0, start_col, true, &mut cache) + 1;
+    fn fire_beam(map: &Vec<&str>, row: usize, col: usize, quantum: bool, cache: &mut HashMap<(usize, usize), u64>) -> u64 {
         let mut timelines: u64 = 0;
-        if !quantum && visited.contains(&(row, col)) {
-            return 0;
-        }
-        if quantum {
-            if let Some(&value) = cache.get(&(row, col)) {
+        if let Some(&value) = cache.get(&(row, col)) {
+            if quantum {
                 return value;
+            } else {
+                return 0;
             }
         }
         match map.get(row) {
             None => return 0, //End
             _ => match map.get(row).unwrap().chars().nth(col).unwrap() {
                 '^' => {
-                    timelines += fire_beam(map, row, col - 1, visited, count, quantum, cache);
-                    visited.insert((row, col - 1));
-                    timelines += fire_beam(map, row, col + 1, visited, count, quantum, cache);
-                    visited.insert((row, col + 1));
-                    if !quantum {
-                        *count += 1;
-                    }
+                    timelines += fire_beam(map, row, col - 1, quantum, cache);
+                    timelines += fire_beam(map, row, col + 1, quantum, cache);
                     return timelines + 1; //Split the timeline
                 },
                 _ =>  {
-                    timelines += fire_beam(map, row + 1, col, visited, count, quantum, cache);
-                    visited.insert((row + 1, col));
+                    timelines += fire_beam(map, row + 1, col, quantum, cache);
                 },
             }
         }
-        if quantum {
-            cache.insert((row, col), timelines);
-        }
+        cache.insert((row, col), timelines);
         timelines
     }
     (count, quantum_result)
