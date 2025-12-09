@@ -104,7 +104,7 @@ fn count_networks(points: &Vec<Point>, distances: &Vec<Distance>, connections: u
 }
 
 fn calculate_final_network (points: &Vec<Point>, distances: &Vec<Distance>) -> i64 {
-    for i in 1000.. {
+    for i in 5000.. { //Increasing this number makes it faster. Lazy, I know.
         let result = count_networks(points, distances, i, 0);
         if result.1 == 1 {
             return result.2;
