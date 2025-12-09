@@ -1,6 +1,6 @@
 use std::{collections::HashSet, fs};
 
-#[derive(Debug, Eq, Hash, PartialEq, Clone)]
+#[derive(Eq, Hash, PartialEq, Clone)]
  struct Point {
      x: i64,
      y: i64,
@@ -16,7 +16,6 @@ impl Point {
     }
 }
 
-//#[derive(Debug)]
 struct Distance<'a> {
     distance: f64,
     points: (&'a Point, &'a Point),
