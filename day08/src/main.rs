@@ -52,7 +52,6 @@ fn main() {
 fn count_networks(points: &Vec<Point>, distances: &Vec<Distance>, connections: usize, mul_largest: usize) -> (usize, usize, i64) {
     let mut point_set: HashSet<Point> = points.iter().cloned().collect();
     let mut networks: Vec<HashSet<&Point>> = Vec::new();
-    let mut new_network: HashSet<&Point> = HashSet::new();
     let mut total: usize = 1;
     let mut last_two: (i64, i64) = (0,0);
     for distance in distances[0..connections].iter() {
@@ -83,10 +82,10 @@ fn count_networks(points: &Vec<Point>, distances: &Vec<Distance>, connections: u
                 networks[n].insert(distance.points.0);
             },
             (None, None) =>  { //Create new network
+                let mut new_network: HashSet<&Point> = HashSet::new();
                 new_network.insert(distance.points.0);
                 new_network.insert(distance.points.1);
                 networks.push(new_network.clone());
-                new_network.clear()
             },
         }
         point_set.remove(distance.points.0);
