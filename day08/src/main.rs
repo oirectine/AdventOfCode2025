@@ -44,17 +44,17 @@ fn main() {
     }
     all_distances.sort_by(|a, b|a.distance.total_cmp(&b.distance));
 
-    let part_1 = count_networks(&points, &all_distances, 1000,3).0;
-    let part_2 = calculate_final_network(&points, &all_distances);
-    println!("After 1000 connections (Part 1): {part_1}\n Last two connections (Part 2): {part_2}");
+    let result = count_networks(&points, &all_distances, 1000,3);
+
+    println!("After 1000 connections (Part 1): {}\n Last two connections (Part 2): {}", result.0, result.1);
 }
 
-fn count_networks(points: &Vec<Point>, distances: &Vec<Distance>, connections: usize, mul_largest: usize) -> (usize, usize, i64) {
+fn count_networks(points: &Vec<Point>, distances: &Vec<Distance>, connections: usize, mul_largest: usize) -> (usize, i64) {
     let mut point_set: HashSet<Point> = points.iter().cloned().collect();
     let mut networks: Vec<HashSet<&Point>> = Vec::new();
     let mut total: usize = 1;
-    let mut last_two: (i64, i64) = (0,0);
-    for distance in distances[0..connections].iter() {
+    let mut last_two: i64 = 0;
+    for (iteration,distance) in distances.iter().enumerate() {
         let mut first = None;
         let mut second = None;
   
@@ -90,24 +90,18 @@ fn count_networks(points: &Vec<Point>, distances: &Vec<Distance>, connections: u
         }
         point_set.remove(distance.points.0);
         point_set.remove(distance.points.1);
-        last_two = (distance.points.0.x, distance.points.1.x);
-    }
-    networks.sort_by(|a, b|b.len().cmp(&(a.len())));
-    for set in &networks[0..mul_largest] {
-        total *= set.len();
-    };
-    if networks.len() + point_set.len() == 1 {
-        println!("{:?} {:?}", last_two.0, last_two.1);
-    }
-    (total, networks.len() + point_set.len(), last_two.0 * last_two.1)
-}
 
-fn calculate_final_network (points: &Vec<Point>, distances: &Vec<Distance>) -> i64 {
-    for i in 5000.. { //Increasing this number makes it faster. Lazy, I know.
-        let result = count_networks(points, distances, i, 0);
-        if result.1 == 1 {
-            return result.2;
+        if iteration == connections {
+            networks.sort_by(|a, b|b.len().cmp(&(a.len())));
+            networks[..mul_largest].iter().for_each(|x|total *= x.len());
         }
-    };
-    0
+
+        if networks.len() + point_set.len() == 1 {
+            last_two += distance.points.0.x * distance.points.1.x;
+            break;
+        }
+
+    }
+
+    (total, last_two)
 }
