@@ -34,7 +34,7 @@ fn main() {
     //Calculate all distances, and place them into a Vector of distances
     let mut all_distances: Vec<Distance> = Vec::new();
     for (index, point) in points.iter().enumerate() {
-        for other_point in &points[index + 1..points.len()] {
+        for other_point in &points[index + 1..] {
             all_distances.push(Distance {
                 distance: point.distance_to(other_point),
                 points: (&point, &other_point),
