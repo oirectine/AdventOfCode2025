@@ -46,7 +46,7 @@ fn main() {
 
     let result = count_networks(&points, &all_distances, 1000,3);
 
-    println!("After 1000 connections (Part 1): {}\n Last two connections (Part 2): {}", result.0, result.1);
+    println!("After 1000 connections (Part 1): {}\nLast two connections (Part 2): {}", result.0, result.1);
 }
 
 fn count_networks(points: &Vec<Point>, distances: &Vec<Distance>, connections: usize, mul_largest: usize) -> (usize, i64) {
