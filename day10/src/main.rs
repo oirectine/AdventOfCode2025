@@ -6,11 +6,11 @@ struct Binary(Vec<bool>);
 
 impl BitXor for Binary {
     type Output = Self;
-    fn bitxor(self, rhs: Self) -> Self::Output {
+    fn bitxor(self, Self(rhs): Self) -> Self::Output {
         let Self(lhs) = self;
         Self(
             lhs.iter()
-                .zip(rhs.0.iter())
+                .zip(rhs.iter())
                 .map(|(x, y)| *x ^ *y)
                 .collect()
         )
