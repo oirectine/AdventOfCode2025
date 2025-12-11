@@ -28,7 +28,9 @@ impl Machine {
         let mut smallest_number: usize = 0;
         for len in 1..=self.buttons.len() {
             for combo in self.buttons.iter().combinations(len) {
-                let test = combo.iter().fold(Binary(vec![false; self.lights.0.len()]), |x, &y| x.clone() ^ y.clone());
+                let test = combo
+                .iter()
+                .fold(Binary(vec![false; self.lights.0.len()]), |x, &y| x ^ y.clone());
                 if test == self.lights {
                     smallest_number = len;
                     break;
