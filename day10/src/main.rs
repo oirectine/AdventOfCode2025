@@ -8,10 +8,9 @@ impl BitXor for Binary {
     type Output = Self;
     fn bitxor(self, rhs: Self) -> Self::Output {
         let Self(lhs) = self;
-        let Self (rhs_vec) = rhs;
         Self(
             lhs.iter()
-                .zip(rhs_vec.iter())
+                .zip(rhs.0.iter())
                 .map(|(x, y)| *x ^ *y)
                 .collect()
         )
@@ -30,7 +29,6 @@ impl Machine {
         for len in 1..=self.buttons.len() {
             for combo in self.buttons.iter().combinations(len) {
                 let test = combo.iter().fold(Binary(vec![false; self.lights.0.len()]), |x, &y| x.clone() ^ y.clone());
-                //println!("{:?}", combo);
                 if test == self.lights {
                     smallest_number = len;
                     break;
